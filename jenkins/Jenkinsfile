@@ -6,7 +6,9 @@ pipeline {
                 instanceType: 't2.micro',  // Filter by instance type
                 tag: 'Name: linux1' // Filter by tag
             ]
-        ) 
+        )
+    }
+    agent {     
         docker {
             image 'maven:3.9.0'
             args '-v /root/.m2:/root/.m2'
