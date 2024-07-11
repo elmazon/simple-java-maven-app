@@ -7,23 +7,54 @@ pipeline {
                 tag: 'Name: linux1' // Filter by tag
             ]
         )
-    }
-    agent {     
-        docker {
+    }*/
+    agent { 
+        try {
+            docker {
             image 'maven:3.9.0'
             args '-v /root/.m2:/root/.m2'
+            }            
+        } 
+        catch (Exception e) { // when error is catched it is sent to Gemini
+                        def errorMessage = e.getMessage()
+                        def suggestion = getGeminiResponse(errorMessage)
+                        echo "Error: ${errorMessage}"
+                        echo "Suggestion from Gemini: ${suggestion}"    
+        
         }
-    } */
-    stages {
+    }     
+    stages{
         stage('Build') {
             steps {
-                sh 'mvn -B -DskipTests clean package'
+                scripts{
+                    try {    
+                        sh 'mvn -B -DskipTests clean package'
+                    } 
+                    catch (Exception e) { // when error is catched it is sent to Gemini
+                            def errorMessage = e.getMessage()
+                            def suggestion = getGeminiResponse(errorMessage)
+                            echo "Error: ${errorMessage}"
+                            echo "Suggestion from Gemini: ${suggestion}"    
+                    }
+                } 
+                
             }
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
-            }
+                scripts{
+                    try {    
+                        sh 'mvn test'
+                    } 
+                    catch (Exception e) { // when error is catched it is sent to Gemini
+                            def errorMessage = e.getMessage()
+                            def suggestion = getGeminiResponse(errorMessage)
+                            echo "Error: ${errorMessage}"
+                            echo "Suggestion from Gemini: ${suggestion}"    
+                    }
+                } 
+                
+            }   
             post {
                 always {
                     junit 'target/surefire-reports/*.xml'
@@ -32,8 +63,38 @@ pipeline {
         }
         stage('Deliver') {
             steps {
-                sh './jenkins/scripts/deliver.sh'
+                scripts{
+                    try {    
+                        sh 'mvn test'
+                    } 
+                    catch (Exception e) { // when error is catched it is sent to Gemini
+                            def errorMessage = e.getMessage()
+                            def suggestion = getGeminiResponse(errorMessage)
+                            echo "Error: ${errorMessage}"
+                            echo "Suggestion from Gemini: ${suggestion}"    
+                    }
+                } 
             }
         }
     }
 }
+def getGeminiResponse(errorMessage) { // function to send the error to Gemini Through API Call
+    def apiKey = 'sk-o6sSqyn7HwQ3g0cTuDQgLA' 
+    def response = sh(
+        script: 
+            """
+                curl -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/completions \\
+                    -H "Authorization: Bearer ${apiKey}" \\
+                    -H "Content-Type: application/json" \\
+                    -d '{
+                        "model": "gemini-model",
+                        "prompt": "Detect the cause of this error and suggest possible solutions: ${errorMessage}",
+                        "max_tokens": 150
+                    }'
+            """, returnStdout: true.trim()
+    )
+    
+    def parsedResponse = readJSON(text: response)
+    return parsedResponse.choices[0].text.trim()
+}
+
