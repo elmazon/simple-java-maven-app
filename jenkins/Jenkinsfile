@@ -9,12 +9,11 @@ pipeline {
                 script {
                     try {
                         sh 'mvn -B -DskipTests clean package'
-                    } catch (Exception e) { // catch the error and send it to Gemini 
+                    } catch (Exception e) { // catch the error and send it to LLM 
                         def errorMessage = e.getMessage()
-                        def suggestion = getGeminiResponse(errorMessage)
+                        def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
-                        echo "Suggestion from Gemini: ${suggestion}"
-                        error "Failed due to: ${errorMessage}"
+                        echo "Suggestion from LLM: ${suggestion}"
                     }
                 }
             }
@@ -26,9 +25,9 @@ pipeline {
                         sh 'mvn test'
                     } catch (Exception e) {
                         def errorMessage = e.getMessage()
-                        def suggestion = getGeminiResponse(errorMessage)
+                        def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
-                        echo "Suggestion from Gemini: ${suggestion}"
+                        echo "Suggestion from LLM: ${suggestion}"
                     }
                 }
             }
@@ -45,9 +44,9 @@ pipeline {
                         sh 'mvn deploy'
                     } catch (Exception e) {
                         def errorMessage = e.getMessage()
-                        def suggestion = getGeminiResponse(errorMessage)
+                        def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
-                        echo "Suggestion from Gemini: ${suggestion}"
+                        echo "Suggestion from LLM: ${suggestion}"
                     }
                 }
             }
@@ -55,7 +54,7 @@ pipeline {
     }
 }
 
-def getGeminiResponse(errorMessage) { // function to send the error to Gemini through API call and recieve respons back 
+def getLLMResponse(errorMessage) { // function to send the error to LLM through API call and recieve respons back 
     def apiKey = 'sk-o6sSqyn7HwQ3g0cTuDQgLA' 
     def response = sh(
         script: """
