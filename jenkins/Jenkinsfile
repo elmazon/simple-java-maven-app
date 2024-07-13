@@ -62,8 +62,8 @@ def getGeminiResponse(errorMessage) { // function to send the error to Gemini th
                 -H "Authorization: Bearer ${apiKey}" \\
                 -H "Content-Type: application/json" \\
                 -d '{
-                    "model": "gemini-model",
-                    "prompt": "Detect the cause of this error and suggest possible solutions: ${errorMessage}",
+                    "model": "tgpt-3.5-turbo",
+                    "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}],
                     "max_tokens": 150
                 }'
         """, returnStdout: true
