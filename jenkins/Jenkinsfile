@@ -61,7 +61,7 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
             curl -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/chat/completions \\
                 -H "Authorization: Bearer ${apiKey}" \\
                 -H "Content-Type: application/json" \\
-                -d '{
+                -D '{
                     "model": "tgpt-3.5-turbo",
                     "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}],
                     "max_tokens": 150
