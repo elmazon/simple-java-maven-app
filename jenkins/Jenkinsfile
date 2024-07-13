@@ -70,5 +70,6 @@ def getGeminiResponse(errorMessage) { // function to send the error to Gemini th
     ).trim()
     
     def parsedResponse = readJSON(text: response)
-    return parsedResponse.choices[0].text.trim()
+    return parsedResponse.choices[0].message.content.trim()
+
 }
