@@ -7,14 +7,14 @@ pipeline {
                 tag: 'Name: linux1' // Filter by tag
             ]
         )
-    }*/
+    }
     agent { 
         try {
             label 'ubuntu'
             /*docker {
             image 'maven:3.9.0'
             args '-v /root/.m2:/root/.m2'
-            } */           
+            }         
         } 
         catch (Exception e) { // when error is catched it is sent to Gemini
                         def errorMessage = e.getMessage()
@@ -23,7 +23,7 @@ pipeline {
                         echo "Suggestion from Gemini: ${suggestion}"    
         
         }
-    }     
+    } */   
     stages{
         stage('Build') {
             steps {
