@@ -14,6 +14,7 @@ pipeline {
                         def suggestion = getGeminiResponse(errorMessage)
                         echo "Error: ${errorMessage}"
                         echo "Suggestion from Gemini: ${suggestion}"
+                        error "Failed due to: ${errorMessage}"
                     }
                 }
             }
