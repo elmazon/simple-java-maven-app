@@ -14,7 +14,7 @@ pipeline {
                         def response = sh(
                             script: """
                             curl -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/chat/completions \
-                                 -H "Authorization: Bearer YOUR_API_KEY" \
+                                 -H "Authorization: Bearer sk-o6sSqyn7HwQ3g0cTuDQgLA" \
                                  -H "Content-Type: application/json" \
                                  -d '{
                                        "model": "gpt-3.5-turbo",
@@ -74,7 +74,7 @@ pipeline {
     }
 }
 
-def getLLMResponse(errorMessage) { // function to send the error to LLM through API call and recieve respons back 
+/*def getLLMResponse(errorMessage) { // function to send the error to LLM through API call and recieve respons back 
     def apiKey = 'sk-o6sSqyn7HwQ3g0cTuDQgLA' 
     def response = sh(
         script: """
@@ -91,4 +91,4 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
     def parsedResponse = readJSON(text: response)
     return parsedResponse.choices[0].message.content.trim()
 
-}
+}*/
