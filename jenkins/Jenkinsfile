@@ -89,8 +89,8 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
         """, returnStdout: true
     ).trim()
     
-    def parsedResponse = readJSON(text: response)
-    return parsedResponse.choices[0].message.content.trim()
-    //return response
+    //def parsedResponse = readJSON(text: response)
+    //return parsedResponse.choices[0].message.content.trim()
+    return response
 
 }
