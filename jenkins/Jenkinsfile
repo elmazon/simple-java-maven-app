@@ -12,7 +12,7 @@ pipeline {
                     } catch (Exception e) { // catch the error and send it to LLM
                         def errorMessage = e.getMessage().replace('"', '\\"')
                         def suggestion = getLLMResponse(errorMessage)
-                        //echo "Error: ${errorMessage}"
+                        echo "Error: ${errorMessage}"
                         echo "Suggestion from LLM: ${suggestion}"
                         error("Build failed: ${error_message}")
                     }
@@ -59,7 +59,7 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
     def apiKey = 'sk-o6sSqyn7HwQ3g0cTuDQgLA' 
     def response = sh(
         script: """
-            curl -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/chat/completions \\
+            curl -s -S -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/chat/completions \\
                 -H "Authorization: Bearer ${apiKey}" \\
                 -H "Content-Type: application/json" \\
                 -d '{
