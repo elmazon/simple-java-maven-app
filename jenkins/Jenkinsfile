@@ -91,6 +91,8 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
     
     //def parsedResponse = readJSON(text: response)
     //return parsedResponse.choices[0].message.content.trim()
-    return response
+    def jsonResponse = new groovy.json.JsonSlurper().parseText(response)
+    def messageContent = jsonResponse.choices[0].message.content
+    return messageContent
 
 }
