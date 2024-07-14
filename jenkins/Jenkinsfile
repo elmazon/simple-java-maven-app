@@ -67,7 +67,7 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
                 -H "Content-Type: application/json" \\
                 -d '{
                     "model": "gemini-pro",
-                    "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}]
+                    "messages": [{"role":"assistant","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}]
                 }'
             set -x
         """, returnStdout: true
