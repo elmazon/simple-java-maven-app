@@ -9,14 +9,34 @@ pipeline {
                 script {
                     try {
                         sh 'mvn -B -DskipTests clean package'
-                    } catch (Exception e) { // catch the error and send it to LLM 
-                        def errorMessage = e.getMessage()
+                    } catch (Exception e) { // catch the error and send it to LLM
+                        def error_message = e.getMessage().replace('"', '\\"')
+                        def response = sh(
+                            script: """
+                            curl -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/chat/completions \
+                                 -H "Authorization: Bearer YOUR_API_KEY" \
+                                 -H "Content-Type: application/json" \
+                                 -d '{
+                                       "model": "gpt-3.5-turbo",
+                                       "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${error_message}"}],
+                                       "max_tokens": 150
+                                     }'
+                            """,
+                            returnStdout: true
+                        ).trim()
+                        echo "LLM Response: ${response}"
+                        currentBuild.result = 'FAILURE'
+                        error("Build failed: ${error_message}")
+                    }
+                }
+            } 
+                    /*    def errorMessage = e.getMessage()
                         def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
                         echo "Suggestion from LLM: ${suggestion}"
                     }
                 }
-            }
+            }*/
         }
         stage('Test') {
             steps {
