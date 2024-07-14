@@ -68,7 +68,7 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
                     "model": "gemini-pro",
                     "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}]
                 }'
-        """, returnStdout: true, returnStatus: true
+        """, returnStdout: true, returnStatus: false
     ).trim()
     def jsonResponse = new groovy.json.JsonSlurper().parseText(response)
     def messageContent = jsonResponse.choices[0].message.content
