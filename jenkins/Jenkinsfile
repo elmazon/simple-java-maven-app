@@ -18,7 +18,7 @@ pipeline {
                                  -H "Content-Type: application/json" \
                                  -d '{
                                        "model": "gemini-pro",
-                                       "messages": [{"role":"assistant","content":"Detect the cause of this error and suggest possible solutions: ${error_message}"}],
+                                       "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${error_message}"}],
                                        "max_tokens": 150
                                      }'
                             """,
@@ -84,7 +84,7 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
                 -H "Content-Type: application/json" \\
                 -d '{
                     "model": "gemini-pro",
-                    "messages": [{"role":"assistant","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}]
+                    "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}]
                 }'
         """, returnStdout: true
     ).trim()
