@@ -13,7 +13,7 @@ pipeline {
                         def errorMessage = e.getMessage().replace('"', '\\"')
                         def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
-                        echo "Suggestion from LLM: ${suggestion}"
+                        echo -e "Suggestion from LLM:\n ${suggestion}"
                         error("Build failed: ${error_message}")
                     }
                 }
@@ -28,7 +28,8 @@ pipeline {
                         def errorMessage = e.getMessage()
                         def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
-                        echo "Suggestion from LLM: ${suggestion}"
+                        echo -e "Suggestion from LLM:\n ${suggestion}"
+                        error("Build failed: ${error_message}")
                     }
                 }
             }
@@ -47,7 +48,8 @@ pipeline {
                         def errorMessage = e.getMessage()
                         def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
-                        echo "Suggestion from LLM: /n ${suggestion}"
+                        echo -e "Suggestion from LLM:\n ${suggestion}"
+                        error("Build failed: ${error_message}")
                     }
                 }
             }
