@@ -10,7 +10,7 @@ pipeline {
                     try {
                         sh 'mvn -B -DskipTests clean package'
                     } catch (Exception e) { // catch the error and send it to LLM
-                        def error_message = e.getMessage().replace('"', '\\"')
+                        /*def error_message = e.getMessage().replace('"', '\\"')
                         def response = sh(
                             script: """
                             curl -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/chat/completions \
@@ -18,7 +18,7 @@ pipeline {
                                  -H "Content-Type: application/json" \
                                  -d '{
                                        "model": "gemini-pro",
-                                       "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${error_message}"}],
+                                       "messages": [{"role":"assistant","content":"Detect the cause of this error and suggest possible solutions: ${error_message}"}],
                                        "max_tokens": 150
                                      }'
                             """,
@@ -29,14 +29,15 @@ pipeline {
                         error("Build failed: ${error_message}")
                     }
                 }
-            } 
-                    /*    def errorMessage = e.getMessage()
+            }*/ 
+                        def errorMessage = e.getMessage().replace('"', '\\"')
                         def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
                         echo "Suggestion from LLM: ${suggestion}"
+                        error("Build failed: ${error_message}")
                     }
                 }
-            }*/
+            }
         }
         stage('Test') {
             steps {
@@ -74,7 +75,7 @@ pipeline {
     }
 }
 
-/*def getLLMResponse(errorMessage) { // function to send the error to LLM through API call and recieve respons back 
+def getLLMResponse(errorMessage) { // function to send the error to LLM through API call and recieve respons back 
     def apiKey = 'sk-o6sSqyn7HwQ3g0cTuDQgLA' 
     def response = sh(
         script: """
@@ -83,12 +84,13 @@ pipeline {
                 -H "Content-Type: application/json" \\
                 -d '{
                     "model": "gemini-pro",
-                    "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}]
+                    "messages": [{"role":"assistant","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}]
                 }'
         """, returnStdout: true
     ).trim()
     
     def parsedResponse = readJSON(text: response)
     return parsedResponse.choices[0].message.content.trim()
+    //return response
 
-}*/
+}
