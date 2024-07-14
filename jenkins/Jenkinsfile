@@ -10,26 +10,6 @@ pipeline {
                     try {
                         sh 'mvn -B -DskipTests clean package'
                     } catch (Exception e) { // catch the error and send it to LLM
-                        /*def error_message = e.getMessage().replace('"', '\\"')
-                        def response = sh(
-                            script: """
-                            curl -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/chat/completions \
-                                 -H "Authorization: Bearer sk-o6sSqyn7HwQ3g0cTuDQgLA" \
-                                 -H "Content-Type: application/json" \
-                                 -d '{
-                                       "model": "gemini-pro",
-                                       "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${error_message}"}],
-                                       "max_tokens": 150
-                                     }'
-                            """,
-                            returnStdout: true
-                        ).trim()
-                        echo "LLM Response: ${response}"
-                        currentBuild.result = 'FAILURE'
-                        error("Build failed: ${error_message}")
-                    }
-                }
-            }*/ 
                         def errorMessage = e.getMessage().replace('"', '\\"')
                         def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
@@ -85,12 +65,9 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
                 -d '{
                     "model": "gemini-pro",
                     "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}]
-                }'
+                }' > /dev/null 2>&1 && cat response.json
         """, returnStdout: true
     ).trim()
-    
-    //def parsedResponse = readJSON(text: response)
-    //return parsedResponse.choices[0].message.content.trim()
     def jsonResponse = new groovy.json.JsonSlurper().parseText(response)
     def messageContent = jsonResponse.choices[0].message.content
     return messageContent
