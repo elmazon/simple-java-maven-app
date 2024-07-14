@@ -47,7 +47,7 @@ pipeline {
                         def errorMessage = e.getMessage()
                         def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
-                        echo "Suggestion from LLM: \n ${suggestion}"
+                        echo "Suggestion from LLM: /n ${suggestion}"
                     }
                 }
             }
