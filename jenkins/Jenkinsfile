@@ -17,7 +17,7 @@ pipeline {
                                  -H "Authorization: Bearer sk-o6sSqyn7HwQ3g0cTuDQgLA" \
                                  -H "Content-Type: application/json" \
                                  -d '{
-                                       "model": "gpt-3.5-turbo",
+                                       "model": "gemini-pro",
                                        "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${error_message}"}],
                                        "max_tokens": 150
                                      }'
@@ -82,7 +82,7 @@ pipeline {
                 -H "Authorization: Bearer ${apiKey}" \\
                 -H "Content-Type: application/json" \\
                 -d '{
-                    "model": "gpt-3.5-turbo",
+                    "model": "gemini-pro",
                     "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}]
                 }'
         """, returnStdout: true
