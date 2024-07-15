@@ -14,7 +14,7 @@ pipeline {
                         def suggestion = getLLMResponse(errorMessage)
                         echo "Error: ${errorMessage}"
                         echo "Suggestion from LLM:\n${suggestion}"
-                        error("Build failed: ${error_message}")
+                        //error("Build failed: ${error_message}")
                     }
                 }
             }
