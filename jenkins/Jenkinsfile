@@ -61,13 +61,15 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
     def apiKey = 'sk-o6sSqyn7HwQ3g0cTuDQgLA' 
     def response = sh(
         script: """
-            curl -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/chat/completions \\
+            set +x 
+            curl -s -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/chat/completions \\
                 -H "Authorization: Bearer ${apiKey}" \\
                 -H "Content-Type: application/json" \\
                 -d '{
                     "model": "gemini-pro",
                     "messages": [{"role":"user","content":"Detect the cause of this error and suggest possible solutions: ${errorMessage}"}]
                 }'
+            set -x
         """, returnStdout: true
     ).trim()
     def jsonResponse = new groovy.json.JsonSlurper().parseText(response)
