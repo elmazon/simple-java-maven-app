@@ -61,7 +61,6 @@ def getLLMResponse(errorMessage) { // function to send the error to LLM through 
     def apiKey = 'sk-o6sSqyn7HwQ3g0cTuDQgLA' 
     def response = sh(
         script: """
-            set +x 
             curl -s -X POST https://litellm.vois-coe-dev-eks.coe-dev.tvois-vodafone.com/chat/completions \\
                 -H "Authorization: Bearer ${apiKey}" \\
                 -H "Content-Type: application/json" \\
